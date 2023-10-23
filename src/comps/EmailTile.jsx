@@ -6,13 +6,15 @@ import { fetchEmailBody } from '../redux/emailSlice';
 
 const EmailTile = ({ email }) => {
 
-    const { readEmails, favorites } = useSelector(app => app.email)
+    const { readEmails, favorites, selectedEmail } = useSelector(app => app.email)
 
     const dispacth = useDispatch();
     const { from, subject, short_description, date, id } = email;
 
     const handleEmmailCLicked = () => {
-        dispacth(fetchEmailBody({ emailId: id, email }))
+        if (!selectedEmail || email.id !== selectedEmail.id) {
+            dispacth(fetchEmailBody({ emailId: id, email }))
+        }
     }
 
     const isRead = readEmails.includes(id);

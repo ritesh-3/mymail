@@ -37,11 +37,10 @@
 body {
   margin: 0;
   padding: 0;
-}
-
-.main-container {
   background: var(--bg-light);
 }
+
+.main-container {}
 
 /* utility classes */
 
@@ -208,18 +207,21 @@ body {
 }
 
 .email-list {
-  height: 85vh;
+  flex: 1;
+  height: 83vh;
   /* width: 100%; */
   padding: 0.5rem;
   overflow-y: scroll;
 }
 
 .email-body {
-  width: 85%;
+  width: 900px;
   height: 75vh;
   background: #fff;
   border-radius: 16px;
   padding: 1.5rem;
+  overflow-y: scroll;
+  transition: all ease-in-out 0.3s;
 }
 
 
@@ -244,7 +246,7 @@ body {
 }
 
 .filter-btns button {
-  background: transparent;
+  /* background: transparent; */
   border: none;
   border: 1px solid transparent;
   padding: 4px 16px;

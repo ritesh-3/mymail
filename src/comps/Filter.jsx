@@ -1,13 +1,13 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { applyFilters } from '../redux/emailSlice';
+import { applyFilters, toggleFilter } from '../redux/emailSlice';
 
 const Filter = () => {
     const dispatch = useDispatch();
     const { filters } = useSelector((state) => state.email);
 
     const handleFilterToggle = (filterName) => {
-        dispatch({ type: 'email/toggleFilter', payload: filterName });
+        dispatch(toggleFilter(filterName))
         dispatch(applyFilters());
     };
 

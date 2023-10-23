@@ -16,6 +16,11 @@ const store = configureStore({
   reducer: {
     email: persistedReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+      immutableCheck: false,
+    }),
 });
 
 const persistor = persistStore(store);

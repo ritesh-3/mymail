@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 const initialState = {
     emails: [],
-    loading: 'idle',
+    isLoading: false,
     error: null,
     favorites: [],
     readEmails: [],
@@ -13,7 +13,7 @@ const initialState = {
         unread: false,
         favorites: false,
     },
-
+    filteredEmails: [],
 };
 
 export const fetchEmails = createAsyncThunk('email/fetchEmails', async (page = 1) => {
@@ -52,7 +52,6 @@ const emailSlice = createSlice({
     reducers: {
         addFavorite: (state, action) => {
             const id = action.payload;
-            // Check if the email ID is not already in the "favorites" array
             if (!state.favorites.includes(id)) {
                 state.favorites.push(id);
             }
@@ -71,7 +70,6 @@ const emailSlice = createSlice({
             state.selectedEmail = action.payload;
         },
         toggleFilter: (state, action) => {
-            // This reducer is responsible for toggling the filter options in your state.
             const filterName = action.payload;
             state.filters[filterName] = !state.filters[filterName];
         },
@@ -80,12 +78,13 @@ const emailSlice = createSlice({
                 const emailId = email.id;
                 const isRead = state.readEmails.includes(emailId);
                 const isFavorite = state.favorites.includes(emailId);
+    
 
                 const filterRead = state.filters.read ? isRead : true;
                 const filterUnread = state.filters.unread ? !isRead : true;
                 const filterFavorites = state.filters.favorites ? isFavorite : true;
 
-                return filterRead && filterUnread && filterFavorites;
+                return filterRead && filterFavorites && filterUnread;
             })
         }
 
@@ -93,30 +92,32 @@ const emailSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fetchEmails.pending, (state) => {
-                state.loading = 'pending';
+                state.isLoading = true;
             })
             .addCase(fetchEmails.fulfilled, (state, action) => {
-                state.loading = 'idle';
+                state.isLoading = false;
                 state.emails = action.payload.list;
             })
             .addCase(fetchEmails.rejected, (state, action) => {
-                state.loading = 'idle';
+                state.isLoading = false;
                 state.error = action.error.message;
             })
             .addCase(fetchEmailBody.pending, (state) => {
-                state.loading = 'pending';
+                state.isLoading = true;
+                state.emailBody = null;
             })
             .addCase(fetchEmailBody.fulfilled, (state, action) => {
-                state.loading = 'idle';
+                state.isLoading = false;
                 state.emailBody = action.payload;
             })
             .addCase(fetchEmailBody.rejected, (state, action) => {
-                state.loading = 'idle';
+                state.isLoading = false;
+                state.emailBody = null;
                 state.error = action.error.message;
             });
     },
 });
 
-export const { addFavorite, removeFavorite, markAsRead, selectedEmail,applyFilters } = emailSlice.actions;
+export const { addFavorite, removeFavorite, markAsRead, selectedEmail, applyFilters, toggleFilter } = emailSlice.actions;
 
 export default emailSlice.reducer;
